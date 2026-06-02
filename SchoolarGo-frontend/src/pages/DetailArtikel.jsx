@@ -1,47 +1,65 @@
-import { useParams } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import { artikelData } from "../data/dummyData";
-import { CalendarDays } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
-export default function DetailArtikel() {
-  const { id } = useParams();
-  const artikel = artikelData.find((item) => item.id === Number(id));
+import logo from "../assets/logo.png";
+import pertamina from "../assets/pertamina.png";
+
+function DetailArtikel() {
+  const location = useLocation();
+
+  const artikel = location.state || {
+    image: pertamina,
+    title: "Cara Mendaftar Beasiswa Pertamina",
+    description:
+      "Artikel ini membahas langkah-langkah mendaftar Beasiswa Pertamina, mulai dari memahami syarat pendaftaran, menyiapkan dokumen, mengisi formulir, hingga mengecek kembali data sebelum dikirim.",
+    description2:
+      "Beasiswa Pertamina biasanya ditujukan untuk pelajar atau mahasiswa yang memiliki semangat belajar tinggi dan ingin mendapatkan dukungan pendidikan.",
+    link: "https://www.google.com/search?q=beasiswa+pertamina+2026",
+  };
 
   return (
-    <div>
-      <Sidebar title="Berita" />
+    <div className="detailArtikel-page">
+      <header className="detailArtikel-header">
+        <img src={logo} alt="SchoolarGo Logo" className="detailArtikel-logo" />
 
-      <main className="content detail-artikel">
-        <h1>{artikel?.title}</h1>
-        <img src={artikel?.image} alt={artikel?.title} />
+        <nav className="detailArtikel-nav">
+          <Link to="/bookmark">BOOKMARK</Link>
+          <Link to="/faq">FAQ</Link>
+          <Link to="/">DASHBOARD</Link>
+          <Link to="/login">LOG OUT</Link>
+        </nav>
+      </header>
 
-        <p className="date">
-          <CalendarDays size={18} /> {artikel?.date}
-        </p>
+      <section className="detailArtikel-hero">
+        <h1>Temukan Beasiswa Impianmu</h1>
+        <p>Gantungkan Cita-citamu Setinggi Langit Bersama SchoolarGo</p>
+        <Link to="/daftar-beasiswa" className="detailArtikel-searchBtn">
+          Cari Beasiswa
+        </Link>
+      </section>
 
-        <p>
-          Lolos seleksi beasiswa tidak hanya dilihat dari nilai akademik, tetapi
-          juga dari keaktifan, motivasi, dan kontribusi diri terhadap lingkungan
-          sekitar. Pastikan seluruh dokumen yang diminta sudah lengkap dan sesuai
-          ketentuan.
-        </p>
+      <section className="detailArtikel-content">
+        <div className="detailArtikel-card">
+          <div className="detailArtikel-text">
+            <h2>{artikel.title}</h2>
 
-        <p>
-          Selain itu, tingkatkan pengalaman organisasi, kemampuan komunikasi,
-          serta pemahaman terhadap tujuan beasiswa. Persiapkan esai motivasi
-          dengan baik agar peluang diterima semakin besar.
-        </p>
+            <p>{artikel.description}</p>
 
-        <button className="btn-primary">Daftar</button>
+            <p>{artikel.description2}</p>
+          </div>
 
-        <div className="info-box">
-          <p>
-            Untuk informasi lengkap mengenai syarat dan tata cara pendaftaran,
-            silakan kunjungi link berikut:
-          </p>
-          <h3>https://kip-kuliah.kemdikbud.go.id/</h3>
+          <div className="detailArtikel-imageBox">
+            <img src={artikel.image} alt={artikel.title} />
+          </div>
         </div>
-      </main>
+
+        <div className="detailArtikel-buttons">
+          
+
+          
+        </div>
+      </section>
     </div>
   );
 }
+
+export default DetailArtikel;
