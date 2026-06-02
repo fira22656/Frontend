@@ -224,6 +224,10 @@ function DaftarBeasiswa() {
       </main>
     </div>
   );
+ fitur--assets
 }
 
 export default DaftarBeasiswa;
+
+}
+ main

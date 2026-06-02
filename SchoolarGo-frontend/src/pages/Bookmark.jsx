@@ -194,6 +194,10 @@ function Bookmark() {
       </main>
     </div>
   );
+ fitur--assets
 }
 
 export default Bookmark;
+
+}
+ main
