@@ -40,7 +40,7 @@ function DetailBeasiswa() {
           <Link to="/bookmark">BOOKMARK</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/">DASHBOARD</Link>
-          <Link to="/register">LOG OUT</Link>
+          <Link to="/register">LOGOUT</Link>
         </nav>
       </header>
 

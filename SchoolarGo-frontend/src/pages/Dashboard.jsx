@@ -104,7 +104,7 @@ function Dashboard() {
           <Link to="/bookmark">BOOKMARK</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/login">LOGIN</Link>
-          <Link to="/register">LOG OUT</Link>
+          <Link to="/register">LOGOUT</Link>
         </nav>
       </header>
 
