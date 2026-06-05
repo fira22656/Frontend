@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import API from "../api/api";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/hero.png";
@@ -21,15 +22,42 @@ function DetailBeasiswa() {
   };
 
   const beasiswa = location.state || dataDefault;
+  const namaBeasiswa = beasiswa.nama_beasiswa || beasiswa.title;
+  const deskripsiBeasiswa = beasiswa.deskripsi || beasiswa.description;
+  const persyaratanBeasiswa = beasiswa.persyaratan || beasiswa.description2;
+  const linkPendaftaran = beasiswa.link_pendaftaran || beasiswa.link;
+
+const gambarBeasiswa = beasiswa.gambar
+  ? beasiswa.gambar.startsWith("/images/")
+    ? beasiswa.gambar
+    : `/images/${beasiswa.gambar}`
+  : beasiswa.image;
 
   const handleDaftar = () => {
     setShowInfo(!showInfo);
   };
 
-  const handleSimpan = () => {
+const handleSimpan = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Kamu harus login dulu untuk menyimpan beasiswa.");
+      navigate("/login");
+      return;
+    }
+
+    await API.post("/bookmarks", {
+      id_scholarship: beasiswa.id_scholarship,
+    });
+
     alert("Beasiswa berhasil disimpan ke Bookmark!");
     navigate("/bookmark");
-  };
+  } catch (error) {
+    console.log("Gagal simpan bookmark:", error.response?.data || error.message);
+    alert("Gagal menyimpan beasiswa. Pastikan kamu sudah login.");
+  }
+};
 
   return (
     <div className="detail-page">
@@ -57,15 +85,15 @@ function DetailBeasiswa() {
 
       <section className="detail-card">
         <div className="detail-text">
-          <h2>{beasiswa.title}</h2>
+        <h2>{namaBeasiswa}</h2>
 
-          <p>{beasiswa.description}</p>
+<p>{deskripsiBeasiswa}</p>
 
-          <p>{beasiswa.description2}</p>
+<p>{persyaratanBeasiswa}</p>
         </div>
 
         <div className="detail-image-box">
-          <img src={beasiswa.image} alt={beasiswa.title} />
+         <img src={gambarBeasiswa} alt={namaBeasiswa} />
         </div>
       </section>
 
@@ -86,9 +114,9 @@ function DetailBeasiswa() {
             silakan kunjungi link berikut:
           </p>
 
-          <a href={beasiswa.link} target="_blank" rel="noreferrer">
-            {beasiswa.link}
-          </a>
+          <a href={linkPendaftaran} target="_blank" rel="noreferrer">
+  {linkPendaftaran}
+</a>
         </section>
       )}
     </div>

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../api/api";
 import logo from "../assets/logo.png";
 
 import pertamina from "../assets/pertamina-1.png";
@@ -6,35 +8,38 @@ import tangerang from "../assets/tangerang-2.png";
 import lpdp from "../assets/lpdp-3.png";
 
 function Artikel() {
-  const artikelList = [
-    {
-      title: "Cara Mendaftar Beasiswa Pertamina",
-      image: pertamina,
-      time: "3 hari lalu",
-      description:
-        "Beasiswa Pertamina merupakan salah satu program bantuan pendidikan yang dapat membantu mahasiswa dalam meringankan biaya kuliah. Untuk mendaftar, calon penerima perlu memperhatikan persyaratan, jadwal pendaftaran, serta dokumen yang harus disiapkan agar proses seleksi dapat berjalan dengan baik.",
-      description2:
-        "Selain melengkapi dokumen, pendaftar juga perlu menyiapkan motivasi yang kuat dan menunjukkan keaktifan dalam bidang akademik maupun non-akademik. Dengan persiapan yang matang, peluang untuk lolos seleksi beasiswa akan menjadi lebih besar.",
-    },
-    {
-      title: "Informasi Beasiswa Tangerang Gemilang",
-      image: tangerang,
-      time: "1 bulan lalu",
-      description:
-        "Beasiswa Tangerang Gemilang merupakan program bantuan pendidikan yang ditujukan untuk mendukung pelajar dan mahasiswa agar dapat melanjutkan pendidikan dengan lebih baik. Program ini membantu meringankan kebutuhan biaya pendidikan bagi penerima yang memenuhi persyaratan.",
-      description2:
-        "Pendaftar perlu memperhatikan ketentuan yang berlaku, mulai dari persyaratan administrasi, jadwal pendaftaran, hingga dokumen pendukung. Dengan persiapan yang tepat, peluang untuk mengikuti seleksi beasiswa ini akan menjadi lebih maksimal.",
-    },
-    {
-      title: "Tips Lolos Beasiswa LPDP",
-      image: lpdp,
-      time: "2 bulan lalu",
-      description:
-        "Beasiswa LPDP menjadi salah satu beasiswa yang banyak diminati karena memberikan dukungan pendidikan yang cukup lengkap. Untuk mengikuti seleksi, pendaftar perlu menyiapkan dokumen, rencana studi, serta alasan yang kuat dalam memilih program pendidikan.",
-      description2:
-        "Selain kemampuan akademik, pendaftar juga perlu menunjukkan visi, pengalaman, dan kontribusi yang ingin diberikan setelah menyelesaikan studi. Persiapan yang matang akan sangat membantu dalam menghadapi setiap tahap seleksi.",
-    },
-  ];
+  const navigate = useNavigate();
+
+const [articles, setArticles] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+
+const getArticles = async () => {
+  try {
+    const response = await API.get("/articles");
+
+    console.log("Data artikel:", response.data);
+
+    setArticles(response.data.data);
+  } catch (err) {
+    console.log("Gagal ambil artikel:", err.response?.data);
+    setError("Gagal memuat data artikel.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  getArticles();
+}, []);
+
+if (loading) {
+  return <p>Memuat data artikel...</p>;
+}
+
+if (error) {
+  return <p style={{ color: "red" }}>{error}</p>;
+}
 
   return (
     <div className="artx-page">
@@ -65,25 +70,38 @@ function Artikel() {
           </div>
         </header>
 
-        <section className="artx-list">
-          {artikelList.map((item, index) => (
-            <Link
-              to="/detail-artikel"
-              state={item}
-              className="artx-item"
-              key={index}
-            >
-              <div className="artx-img-box">
-                <img src={item.image} alt={item.title} />
-              </div>
+<section className="artx-list">
+  {articles.length === 0 ? (
+    <p>Belum ada data artikel.</p>
+  ) : (
+    articles.map((item) => (
+      <Link
+        to="/detail-artikel"
+        state={item}
+        className="artx-item"
+        key={item.id_article}
+      >
+        <div className="artx-img-box">
+          <img
+            src={`/images/${item.gambar}`}
+            alt={item.judul}
+          />
+        </div>
 
-              <div className="artx-text">
-                <h2>{item.title}</h2>
-                <p>▦ {item.time}</p>
-              </div>
-            </Link>
-          ))}
-        </section>
+        <div className="artx-text">
+          <h2>{item.judul}</h2>
+          <p>
+            {new Date(item.created_at).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+        </div>
+      </Link>
+    ))
+  )}
+</section>
       </main>
     </div>
   );

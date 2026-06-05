@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../api/api";
 
 import logo from "../assets/logo.png";
 
@@ -11,10 +12,34 @@ function DaftarBeasiswa() {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
-  const [jurusan, setJurusan] = useState("");
-  const [jenjang, setJenjang] = useState("");
-  const [semester, setSemester] = useState("");
-  const [hasil, setHasil] = useState([]);
+const [jurusan, setJurusan] = useState("");
+const [jenjang, setJenjang] = useState("");
+const [semester, setSemester] = useState("");
+const [hasil, setHasil] = useState([]);
+const [sudahCari, setSudahCari] = useState(false);
+
+const [beasiswa, setBeasiswa] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+
+const getBeasiswa = async () => {
+  try {
+    const response = await API.get("/scholarships");
+
+    console.log("Data beasiswa:", response.data);
+
+    setBeasiswa(response.data.data);
+    setHasil(response.data.data);
+  } catch (err) {
+    console.log("Gagal ambil beasiswa:", err.response?.data);
+    setError("Gagal memuat data beasiswa.");
+  } finally {
+    setLoading(false);
+  }
+};
+useEffect(() => {
+  getBeasiswa();
+}, []);
 
   const dataBeasiswa = [
     {
@@ -55,29 +80,38 @@ function DaftarBeasiswa() {
     },
   ];
 
-  const handleCari = () => {
-    let data = dataBeasiswa;
+const handleCari = () => {
+  let data = beasiswa;
 
-    if (search.trim() !== "") {
-      data = data.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  if (search.trim() !== "") {
+    data = data.filter((item) =>
+      item.nama_beasiswa.toLowerCase().includes(search.toLowerCase())
+    );
+  }
 
-    if (jurusan !== "") {
-      data = data.filter((item) => item.jurusan.includes(jurusan));
-    }
+  if (jurusan !== "") {
+    data = data.filter(
+      (item) => item.kategori_jurusan === jurusan
+    );
+  }
 
-    if (jenjang !== "") {
-      data = data.filter((item) => item.jenjang.includes(jenjang));
-    }
+  if (jenjang !== "") {
+    data = data.filter(
+      (item) => item.education_level?.nama_level === jenjang
+    );
+  }
 
-    if (semester !== "") {
-      data = data.filter((item) => item.semester.includes(semester));
-    }
+  if (semester !== "") {
+    data = data.filter(
+      (item) =>
+        Number(semester) >= item.semester_min &&
+        Number(semester) <= item.semester_max
+    );
+  }
 
-    setHasil(data);
-  };
+  setHasil(data);
+  setSudahCari(true);
+};
 
   const handleEnter = (e) => {
     if (e.key === "Enter") {
@@ -85,10 +119,18 @@ function DaftarBeasiswa() {
     }
   };
 
-  const tampilData = hasil.length > 0 ? hasil : dataBeasiswa;
+const tampilData = sudahCari ? hasil : beasiswa;
 
-  return (
-    <div className="daftar-page">
+if (loading) {
+  return <p>Memuat data beasiswa...</p>;
+}
+
+if (error) {
+  return <p style={{ color: "red" }}>{error}</p>;
+}
+
+return (
+  <div className="daftar-page">
       <aside className="daftar-sidebar">
         <img src={logo} alt="SchoolarGo Logo" className="daftar-logo" />
 
@@ -142,7 +184,7 @@ function DaftarBeasiswa() {
               <h3>Jurusan</h3>
 
               <div className="filter-options">
-                {["kedokteran", "IPA", "Matematika"].map((item) => (
+                {["Soshum", "MIPA"].map((item) => (
                   <button
                     type="button"
                     key={item}
@@ -163,7 +205,7 @@ function DaftarBeasiswa() {
               <h3>Jenjang</h3>
 
               <div className="filter-options">
-                {["D4/S1", "S2", "D2/D3"].map((item) => (
+                {["S1", "S2", "D3"].map((item) => (
                   <button
                     type="button"
                     key={item}
@@ -184,7 +226,7 @@ function DaftarBeasiswa() {
               <h3>Semester</h3>
 
               <div className="filter-options">
-                {["1", "2", "3", "4", "5", "6", "7"].map((item) => (
+                {["1", "2", "3", "4", "5", "6", "7", "8"].map((item) => (
                   <button
                     type="button"
                     key={item}
@@ -209,25 +251,36 @@ function DaftarBeasiswa() {
           <h2>Daftar Beasiswa</h2>
 
           <div className="daftar-card-grid">
-            {tampilData.map((item, index) => (
-              <div
-                className="daftar-card"
-                key={index}
-                onClick={() => navigate("/detail-beasiswa", { state: item })}
-              >
-                <img src={item.image} alt={item.title} />
-                <h3>{item.title}</h3>
-              </div>
-            ))}
+           {tampilData.length === 0 ? (
+  <p>Belum ada data beasiswa.</p>
+) : (
+  tampilData.map((item, index) => (
+<div
+  className="daftar-card"
+  key={item.id_scholarship}
+  onClick={() => navigate("/detail-beasiswa", { state: item })}
+>
+  <img
+    src={
+      item.gambar?.startsWith("/images/")
+        ? item.gambar
+        : `/images/${item.gambar || "kip.png"}`
+    }
+    alt={item.nama_beasiswa}
+  />
+
+  <div className="daftar-card-title">
+    <h3>{item.nama_beasiswa}</h3>
+  </div>
+</div>
+  ))
+)}
           </div>
         </section>
       </main>
     </div>
   );
- fitur--assets
 }
 
 export default DaftarBeasiswa;
 
-}
- main

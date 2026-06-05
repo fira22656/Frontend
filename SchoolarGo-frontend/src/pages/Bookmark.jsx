@@ -1,123 +1,75 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../api/api";
 
 import logo from "../assets/logo.png";
-
-import kip from "../assets/kip.png";
-import ayoPintar from "../assets/ayo-pintar.png";
-import ruangEdukasi from "../assets/ruang-edukasi.png";
-import sangSurya from "../assets/sang-surya.png";
-import luarNegri from "../assets/luar negri.png";
-import japfa from "../assets/japfa.png";
-import glowandlove from "../assets/glowandlovely.png";
-import inspiratif from "../assets/inspiratif.png";
 
 function Bookmark() {
   const navigate = useNavigate();
 
-  const [bookmarks, setBookmarks] = useState([
-    {
-      title: "Beasiswa KIP-KULIAH",
-      deadline: "Deadline 30 Maret 2026",
-      image: kip,
-      description:
-        "Melalui beasiswa ini, penerima akan mendapatkan pembiayaan kuliah secara penuh serta bantuan uang saku untuk mendukung kebutuhan selama masa studi.",
-      description2:
-        "Dengan adanya program KIP-Kuliah, mahasiswa diharapkan dapat lebih fokus mengembangkan prestasi akademik maupun non-akademik.",
-      link: "https://kip-kuliah.kemdikbud.go.id/",
-    },
-    {
-      title: "Beasiswa Pendidikan Ayo Pintar",
-      deadline: "Deadline 24 Maret 2026",
-      image: ayoPintar,
-      description:
-        "Beasiswa Pendidikan Ayo Pintar ditujukan untuk membantu pelajar dan mahasiswa agar tetap semangat dalam menempuh pendidikan.",
-      description2:
-        "Program ini memberikan dukungan biaya pendidikan sehingga penerima dapat lebih fokus belajar dan mengembangkan kemampuan diri.",
-      link: "https://www.google.com/search?q=beasiswa+pendidikan+ayo+pintar",
-    },
-    {
-      title: "Beasiswa Pendidikan Ruang Edukasi",
-      deadline: "Deadline 25 Mei 2026",
-      image: ruangEdukasi,
-      description:
-        "Beasiswa Pendidikan Ruang Edukasi merupakan program bantuan pendidikan untuk mendukung pelajar dan mahasiswa yang membutuhkan.",
-      description2:
-        "Melalui beasiswa ini, penerima diharapkan dapat terus melanjutkan pendidikan dengan baik dan meningkatkan prestasi.",
-      link: "https://www.google.com/search?q=beasiswa+ruang+edukasi",
-    },
-    {
-      title: "Beasiswa Sang Surya",
-      deadline: "Deadline 31 Juli 2026",
-      image: sangSurya,
-      description:
-        "Beasiswa Sang Surya memberikan kesempatan bagi pelajar dan mahasiswa untuk memperoleh bantuan pendidikan.",
-      description2:
-        "Program ini dapat membantu meringankan biaya pendidikan dan mendukung penerima agar tetap berprestasi.",
-      link: "https://www.google.com/search?q=beasiswa+sang+surya",
-    },
-    {
-      title: "Beasiswa Luar Negeri",
-      deadline: "Deadline 10 Juni 2026",
-      image: luarNegri,
-      description:
-        "Beasiswa Luar Negeri memberikan peluang bagi mahasiswa untuk melanjutkan studi di luar negeri.",
-      description2:
-        "Program ini cocok bagi mahasiswa yang ingin memperluas pengalaman akademik dan mengembangkan wawasan internasional.",
-      link: "https://www.google.com/search?q=beasiswa+luar+negeri+2026",
-    },
-    {
-      title: "Beasiswa JAPFA",
-      deadline: "Deadline 15 Juni 2026",
-      image: japfa,
-      description:
-        "Beasiswa JAPFA merupakan bantuan pendidikan yang diberikan kepada pelajar atau mahasiswa berprestasi.",
-      description2:
-        "Program ini dapat membantu penerima dalam memenuhi kebutuhan pendidikan dan mengembangkan potensi diri.",
-      link: "https://www.google.com/search?q=beasiswa+japfa",
-    },
-    {
-      title: "Beasiswa Glow & Lovely",
-      deadline: "Deadline 20 Juni 2026",
-      image: glowandlove,
-      description:
-        "Beasiswa Glow & Lovely ditujukan untuk mendukung perempuan muda dalam melanjutkan pendidikan.",
-      description2:
-        "Program ini membantu penerima agar lebih percaya diri, mandiri, dan mampu mengembangkan cita-citanya.",
-      link: "https://www.google.com/search?q=beasiswa+glow+and+lovely",
-    },
-    {
-      title: "Beasiswa Inspiratif",
-      deadline: "Deadline 25 Juni 2026",
-      image: inspiratif,
-      description:
-        "Beasiswa Inspiratif merupakan program bantuan pendidikan untuk pelajar dan mahasiswa yang memiliki semangat belajar tinggi.",
-      description2:
-        "Beasiswa ini diharapkan dapat membantu penerima dalam mengembangkan prestasi dan mencapai tujuan pendidikannya.",
-      link: "https://www.google.com/search?q=beasiswa+inspiratif",
-    },
-  ]);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const getBookmarks = async () => {
+  try {
+    const response = await API.get("/bookmarks");
+
+    console.log("Data bookmark:", response.data);
+
+    setBookmarks(response.data.data ?? response.data);
+  } catch (err) {
+    console.log("Gagal ambil bookmark:", err.response?.data);
+    setError("Gagal memuat bookmark. Pastikan kamu sudah login.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  getBookmarks();
+}, []);
 
   const [search, setSearch] = useState("");
 
-  const handleHapus = (indexHapus) => {
-    const konfirmasi = window.confirm(
-      "Apakah kamu yakin ingin menghapus beasiswa ini dari bookmark?"
+  const handleHapus = async (idBookmark) => {
+  const konfirmasi = window.confirm(
+    "Apakah kamu yakin ingin menghapus beasiswa ini dari bookmark?"
+  );
+
+  if (!konfirmasi) return;
+
+  try {
+    await API.delete(`/bookmarks/${idBookmark}`);
+
+    setBookmarks((prev) =>
+      prev.filter((item) => item.id_bookmark !== idBookmark)
     );
 
-    if (konfirmasi) {
-      const dataBaru = bookmarks.filter((_, index) => index !== indexHapus);
-      setBookmarks(dataBaru);
-    }
-  };
+    alert("Bookmark berhasil dihapus.");
+  } catch (err) {
+    console.log("Gagal hapus bookmark:", err.response?.data);
+    alert("Gagal menghapus bookmark.");
+  }
+};
 
   const handleTambah = () => {
     navigate("/daftar-beasiswa");
   };
 
   const hasilSearch = bookmarks.filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
+  item.scholarship?.nama_beasiswa
+    ?.toLowerCase()
+    .includes(search.toLowerCase())
+);
+
+if (loading) {
+  return <p>Memuat data bookmark...</p>;
+}
+
+if (error) {
+  return <p style={{ color: "red" }}>{error}</p>;
+}
 
   return (
     <div className="bookmark-page">
@@ -164,40 +116,56 @@ function Bookmark() {
         </section>
 
         <section className="bookmark-list">
-          {hasilSearch.length === 0 ? (
-            <p className="bookmark-empty">Beasiswa tidak ditemukan.</p>
-          ) : (
-            <div className="bookmark-grid">
-              {hasilSearch.map((item, index) => (
-                <div className="bookmark-card" key={index}>
-                  <div
-                    className="bookmark-card-content"
-                    onClick={() => navigate("/detail-beasiswa", { state: item })}
-                  >
-                    <img src={item.image} alt={item.title} />
-                    <h3>{item.title}</h3>
-                    <p>{item.deadline}</p>
-                  </div>
+  {hasilSearch.length === 0 ? (
+    <p className="bookmark-empty">Belum ada beasiswa yang disimpan.</p>
+  ) : (
+    <div className="bookmark-grid">
+      {hasilSearch.map((item) => {
+  const beasiswa = item.scholarship;
 
-                  <button
-                    type="button"
-                    className="bookmark-delete"
-                    onClick={() => handleHapus(index)}
-                  >
-                    Hapus
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+  const gambarBookmark = beasiswa?.gambar
+    ? beasiswa.gambar.startsWith("/images/")
+      ? beasiswa.gambar
+      : `/images/${beasiswa.gambar}`
+    : "/images/kip.png";
+
+  return (
+    <div className="bookmark-card" key={item.id_bookmark}>
+      <div
+        className="bookmark-card-content"
+        onClick={() =>
+          navigate("/detail-beasiswa", {
+            state: beasiswa,
+          })
+        }
+      >
+        <img
+          src={gambarBookmark}
+          alt={beasiswa?.nama_beasiswa}
+        />
+
+        <div className="bookmark-card-title">
+          <h3>{beasiswa?.nama_beasiswa}</h3>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="bookmark-delete"
+        onClick={() => handleHapus(item.id_bookmark)}
+      >
+        Hapus
+      </button>
+    </div>
+  );
+})}
+    </div>
+  )}
+</section>
       </main>
     </div>
   );
- fitur--assets
+
 }
 
 export default Bookmark;
-
-}
- main

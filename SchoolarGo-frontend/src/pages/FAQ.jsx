@@ -1,50 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API from "../api/api";
 import logo from "../assets/logo.png";
 
 function FAQ() {
   const [search, setSearch] = useState("");
   const [hasil, setHasil] = useState([]);
 
-  const popularQuestions = [
-    {
-      question: "How do I reset my password?",
-      answer: "Click on 'Forgot Password' on the login page.",
-    },
-    {
-      question: "How do I change my account settings?",
-      answer: "Go to 'Account Settings' in your profile.",
-    },
-  ];
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const additionalQuestions = [
-    {
-      question: "How do I save a scholarship?",
-      answer: "Open the scholarship detail page, then click the Save button.",
-    },
-    {
-      question: "How do I search for scholarships?",
-      answer: "Use the search feature or filter scholarship options based on your needs.",
-    },
-  ];
+  const getFaqs = async () => {
+  try {
+    const response = await API.get("/faqs");
 
-  const allQuestions = [...popularQuestions, ...additionalQuestions];
+    console.log("Data FAQ:", response.data);
 
-  const handleSearch = () => {
-    if (search.trim() === "") {
-      alert("Masukkan pertanyaan terlebih dahulu!");
-      setHasil([]);
-      return;
-    }
+    setFaqs(response.data);
+  } catch (err) {
+    console.log("Gagal ambil FAQ:", err.response?.data);
+    setError("Gagal memuat data FAQ.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    const filtered = allQuestions.filter((item) =>
-      item.question.toLowerCase().includes(search.toLowerCase())
-    );
+useEffect(() => {
+  getFaqs();
+}, []);
 
-    setHasil(filtered);
-  };
+const handleSearch = () => {
+  if (search.trim() === "") {
+    alert("Masukkan pertanyaan terlebih dahulu!");
+    setHasil([]);
+    return;
+  }
 
-  const tampilPopular = hasil.length > 0 ? hasil : popularQuestions;
+  const filtered = faqs.filter((item) =>
+    item.pertanyaan.toLowerCase().includes(search.toLowerCase())
+  );
+
+  setHasil(filtered);
+};
+
+ const tampilFaq = hasil.length > 0 ? hasil : faqs;
+
+ if (loading) {
+  return <p>Memuat data FAQ...</p>;
+}
+
+if (error) {
+  return <p style={{ color: "red" }}>{error}</p>;
+}
 
   return (
     <div className="fq-page">
@@ -88,29 +96,19 @@ function FAQ() {
         <div className="fq-row">
           <h2>Popular Questions</h2>
 
-          <div className="fq-list">
-            {tampilPopular.map((item, index) => (
-              <div className="fq-item" key={index}>
-                <div className="fq-icon">?</div>
-                <p className="fq-question">{item.question}</p>
-                <p className="fq-answer">{item.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="fq-row fq-additional">
-          <h2>Additional Questions</h2>
-
-          <div className="fq-list">
-            {additionalQuestions.map((item, index) => (
-              <div className="fq-item" key={index}>
-                <div className="fq-icon">?</div>
-                <p className="fq-question">{item.question}</p>
-                <p className="fq-answer">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+         <div className="fq-list">
+  {tampilFaq.length === 0 ? (
+    <p>Belum ada data FAQ.</p>
+  ) : (
+    tampilFaq.map((item) => (
+      <div className="fq-item" key={item.id_faq}>
+        <div className="fq-icon">?</div>
+        <p className="fq-question">{item.pertanyaan}</p>
+        <p className="fq-answer">{item.jawaban}</p>
+      </div>
+    ))
+  )}
+</div>
         </div>
       </section>
     </div>

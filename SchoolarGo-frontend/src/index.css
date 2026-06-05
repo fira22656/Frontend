@@ -1051,7 +1051,6 @@ body {
 
 .filter-card {
   background: white;
- fitur--assets
   border-radius: 6px;
   height: 145px;
   display: flex;
@@ -12441,7 +12440,6 @@ body {
 
 .faq-content {
   padding: 60px 7%;
- main
 }
 
 .faq-content h1 {
@@ -12718,4 +12716,222 @@ body {
   .auth-header h1 {
     font-size: 38px;
   }
+}
+.filter-options button {
+  cursor: pointer;
+  border: none;
+  padding: 8px 16px;
+  margin: 5px;
+  background-color: #e9e9e9;
+  color: black;
+  font-size: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.filter-options button:hover {
+  background-color: #d0d0d0;
+}
+
+.filter-options button.active-filter {
+  background-color: #202d67;
+  color: white;
+}
+
+.filter-section,
+.filter-card,
+.filter-options,
+.filter-options button {
+  pointer-events: auto;
+}
+.daftar-card {
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.daftar-card img {
+  width: 100%;
+  height: 360px;
+  object-fit: contain;
+  display: block;
+  background-color: white;
+}
+
+.daftar-card-title {
+  background-color: white;
+  padding: 14px 12px;
+  text-align: center;
+}
+
+.daftar-card-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+.daftar-card img {
+  width: 100% !important;
+  height: 360px !important;
+  object-fit: contain !important;
+  display: block !important;
+  background-color: white !important;
+}
+
+.daftar-card-title {
+  background-color: white;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.daftar-card-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+ .bookmark-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  padding: 30px 50px;
+}
+
+.bookmark-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+}
+
+.bookmark-card-content img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+.bookmark-card-title {
+  background-color: white;
+  padding: 16px 12px;
+}
+
+.bookmark-card-title h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+
+.bookmark-card-title p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #333;
+}
+
+.bookmark-delete {
+  margin: 10px 0 18px;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1f2b6c;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forgot-page {
+  min-height: 100vh;
+  background: linear-gradient(to right, #b8edf4, #43aee2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.forgot-card {
+  width: 430px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.forgot-card h1 {
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.forgot-card p {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.forgot-card form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.forgot-card label {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.forgot-card input {
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 18px;
+}
+
+.forgot-card button {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1f2b6c;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.forgot-message {
+  color: #1f2b6c;
+  font-weight: 600;
+}
+
+.back-login {
+  display: block;
+  margin-top: 20px;
+  color: #1f2b6c;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.forgot-btn {
+  display: inline-block;
+  text-align: center;
+  padding: 13px 30px;
+  border: 2px solid #111;
+  border-radius: 6px;
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.forgot-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  width: 100%;
+  height: 48px;
+  border: 2px solid #111;
+  border-radius: 6px;
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
 }

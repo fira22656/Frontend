@@ -7,15 +7,11 @@ function DetailArtikel() {
   const location = useLocation();
 
   const artikel = location.state || {
-    image: pertamina,
-    title: "Cara Mendaftar Beasiswa Pertamina",
-    description:
-      "Artikel ini membahas langkah-langkah mendaftar Beasiswa Pertamina, mulai dari memahami syarat pendaftaran, menyiapkan dokumen, mengisi formulir, hingga mengecek kembali data sebelum dikirim.",
-    description2:
-      "Beasiswa Pertamina biasanya ditujukan untuk pelajar atau mahasiswa yang memiliki semangat belajar tinggi dan ingin mendapatkan dukungan pendidikan.",
-    link: "https://www.google.com/search?q=beasiswa+pertamina+2026",
-  };
-
+  gambar: "artikel.jpg",
+  judul: "Tips Mendapatkan Beasiswa",
+  isi_artikel: "Persiapkan dokumen, CV, sertifikat, dan esai dengan baik.",
+  link_pendaftaran: "https://contoh.com",
+};
   return (
     <div className="detailArtikel-page">
       <header className="detailArtikel-header">
@@ -39,19 +35,23 @@ function DetailArtikel() {
 
       <section className="detailArtikel-content">
         <div className="detailArtikel-card">
-          <div className="detailArtikel-text">
-            <h2>{artikel.title}</h2>
+  <div className="detailArtikel-text">
+    <h2>{artikel.judul}</h2>
 
-            <p>{artikel.description}</p>
+    <p>{artikel.isi_artikel}</p>
+  </div>
 
-            <p>{artikel.description2}</p>
-          </div>
-
-          <div className="detailArtikel-imageBox">
-            <img src={artikel.image} alt={artikel.title} />
-          </div>
-        </div>
-
+  <div className="detailArtikel-imageBox">
+    <img
+      src={
+        artikel.gambar?.startsWith("/images/")
+          ? artikel.gambar
+          : `/images/${artikel.gambar}`
+      }
+      alt={artikel.judul}
+    />
+  </div>
+</div>
         <div className="detailArtikel-buttons">
           
 

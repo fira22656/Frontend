@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../api/api";
 import logo from "../assets/logo.png";
 
 function Login() {
@@ -8,33 +9,24 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const correctEmail = "firasalimah@student.ub.ac.id";
-  const correctPassword = "12345";
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  try {
+    const response = await API.post("/login", {
+      email: email,
+      password: password,
+    });
 
-    if (email !== correctEmail && password !== correctPassword) {
-      alert("Email dan password salah!");
-      setEmail("");
-      setPassword("");
-      return;
-    }
-
-    if (email !== correctEmail) {
-      alert("Email salah!");
-      setEmail("");
-      return;
-    }
-
-    if (password !== correctPassword) {
-      alert("Password salah!");
-      setPassword("");
-      return;
-    }
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
 
     alert("Login berhasil!");
     navigate("/");
+  } catch (error) {
+    alert("Login gagal! Email atau password salah.");
+    console.log(error.response?.data || error.message);
+  }
   };
 
   return (
@@ -77,10 +69,19 @@ function Login() {
             </div>
 
             <div className="login-buttons">
-              <button type="button" className="forgot-button">
-                Forgot Password?
-              </button>
-
+             <a
+  href="/forgot-password"
+  className="forgot-button"
+  style={{
+    position: "relative",
+    zIndex: 9999,
+    pointerEvents: "auto",
+    cursor: "pointer",
+    textDecoration: "none",
+  }}
+>
+  Forgot Password?
+</a>
               <button type="submit" className="login-button">
                 Login
               </button>

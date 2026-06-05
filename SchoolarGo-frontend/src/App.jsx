@@ -9,20 +9,79 @@ import Bookmark from "./pages/Bookmark";
 import FAQ from "./pages/FAQ";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/daftar-beasiswa" element={<DaftarBeasiswa />} />
-        <Route path="/detail-beasiswa" element={<DetailBeasiswa />} />
-        <Route path="/artikel" element={<Artikel />} />
-        <Route path="/detail-artikel" element={<DetailArtikel />} />
-        <Route path="/bookmark" element={<Bookmark />} />
-        <Route path="/faq" element={<FAQ />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+<Route path="/register" element={<Register />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+
+<Route
+  path="/"
+  element={
+    <PrivateRoute>
+      <Dashboard />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/daftar-beasiswa"
+  element={
+    <PrivateRoute>
+      <DaftarBeasiswa />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/detail-beasiswa"
+  element={
+    <PrivateRoute>
+      <DetailBeasiswa />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/artikel"
+  element={
+    <PrivateRoute>
+      <Artikel />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/detail-artikel"
+  element={
+    <PrivateRoute>
+      <DetailArtikel />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/bookmark"
+  element={
+    <PrivateRoute>
+      <Bookmark />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/faq"
+  element={
+    <PrivateRoute>
+      <FAQ />
+    </PrivateRoute>
+  }
+/>
       </Routes>
     </BrowserRouter>
   );
